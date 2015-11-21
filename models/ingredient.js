@@ -5,7 +5,7 @@ var mongoose = require('mongoose');
 var IngredientSchema   = new mongoose.Schema({
     name: String,
     weight: Number,
-    unit: Number,
+    unit: String,
     macros: {
         protein: Number,
         carbs: Number,
