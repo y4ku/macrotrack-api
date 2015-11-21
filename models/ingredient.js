@@ -1,7 +1,6 @@
 // Load required packages
 var mongoose = require('mongoose');
 
-// Define our beer schema
 var IngredientSchema   = new mongoose.Schema({
     name: String,
     weight: Number,

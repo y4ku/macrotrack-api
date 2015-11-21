@@ -1,7 +1,6 @@
 // Load required packages
 var mongoose = require('mongoose');
 
-// Define our beer schema
 var RecipeSchema = new mongoose.Schema({
     name: String,
     ingredients: [{ type: Schema.Types.ObjectId, ref: 'Ingredient', weight: Number, unit: String}],

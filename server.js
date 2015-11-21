@@ -6,7 +6,7 @@ var bodyParser = require('body-parser');
 //Controllers
 var ingredientController = require('./controllers/ingredient');
 
-// Connect to the beerlocker MongoDB
+// Connect to the macrotrack MongoDB
 mongoose.connect('mongodb://localhost:27017/macrotrack');
 
 // Create our Express application
@@ -26,15 +26,13 @@ var router = express.Router();
 // Initial dummy route for testing
 // http://localhost:3000/api
 router.get('/', function(req, res) {
-    res.json({ message: 'You are running dangerously low on beer!' });
+    res.json({ message: 'You are running dangerously low on macros!' });
 });
 
-// Create a new route with the prefix /beers
 router.route('/ingredients')
     .get(ingredientController.getIngredients)
     .post(ingredientController.postIngredients);
 
-// Create a new route with the /beers/:beer_id prefix
 router.route('/ingredients/:ingredient_id')
     .get(ingredientController.getIngredient);
 

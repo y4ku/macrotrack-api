@@ -4,7 +4,6 @@ exports.postIngredients = function(req, res) {
     // Create a new instance of the Beer model
     var ingredient = new Ingredient();
 
-    // Set the beer properties that came from the POST data
     ingredient.name = req.body.name;
     ingredient.weight = req.body.weight;
     ingredient.unit = req.body.unit;
@@ -14,7 +13,6 @@ exports.postIngredients = function(req, res) {
         fats: req.body.actual.fats
     };
 
-    // Save the beer and check for errors
     ingredient.save(function(err) {
         if (err)
             res.send(err);
@@ -33,7 +31,6 @@ exports.getIngredients = function(req, res) {
 };
 
 exports.getIngredient = function(req, res) {
-    // Use the Beer model to find a specific beer
     Ingredient.findById(req.params.ingredient_id, function(err, ingredient) {
         if (err)
             res.send(err);
