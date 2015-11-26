@@ -40,7 +40,7 @@ exports.getIngredient = function(req, res) {
 };
 
 exports.searchIngredients = function (req, res) {
-    Ingredient.find({"food_description": new RegExp('/.*' + req.params.ingredient_string + '.*/')}, function (err, ingredient) {
+    Ingredient.find({"food_description": new RegExp('.*' + req.params.ingredient_string + '.*')}, function (err, ingredient) {
         if (err)
             res.send(err);
 
