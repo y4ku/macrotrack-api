@@ -4,14 +4,21 @@ var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var passport = require('passport');
 
+//Config
+var config = require('./config');
+
+//Middleware
+var morgan = require('morgan');
+
 //Controllers
 var ingredientController = require('./controllers/ingredient');
 var userController = require('./controllers/user');
 var authController = require('./controllers/auth');
 var recipeController = require('./controllers/recipe');
+var macroController = require('./controllers/macro');
 
 // Connect to the macrotrack MongoDB
-mongoose.connect('mongodb://localhost:27017/macrotrack');
+mongoose.connect(config.url);
 
 // Create our Express application
 var app = express();
@@ -20,6 +27,9 @@ var app = express();
 app.use(bodyParser.json({
     type: "application/json"
 }));
+
+// use morgan to log requests to the console
+app.use(morgan('dev'));
 
 // Use the passport package in our application
 app.use(passport.initialize());
@@ -37,13 +47,25 @@ router.get('/', function(req, res) {
 });
 
 // Create endpoint handlers for /users
-router.route('/users')
-    .post(userController.postUsers)
-    .get(authController.isAuthenticated, userController.getUsers);
+router.route('/signup')
+    .post(userController.postUsers);
+
+router.route('/login')
+    .post(userController.loginUser)
+
+router.route('/macros/:date')
+    .get(authController.isAuthenticated, macroController.getMacrosByDate);
+
+router.route('/macros')
+    .get(authController.isAuthenticated, macroController.getMacros)
+    .post(authController.isAuthenticated, macroController.setMacrosByDate);
 
 router.route('/ingredients')
     .get(authController.isAuthenticated, ingredientController.getIngredients)
     .post(authController.isAuthenticated, ingredientController.postIngredients);
+
+router.route('/searchIngredient/:ingredient_string')
+    .get(authController.isAuthenticated, ingredientController.searchIngredients);
 
 router.route('/ingredients/:ingredient_id')
     .get(authController.isAuthenticated, ingredientController.getIngredient);
@@ -63,3 +85,12 @@ app.use('/api', router);
 // Start the server
 app.listen(port);
 console.log('Insert macros on port ' + port);
+
+var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens'
+var token = jwt.sign({
+    username: "kuba",
+    permissions: "admin"
+}, config.secret, {
+    expiresIn: 1440, // expires in 24 hours
+    issuer: config.issuer
+});

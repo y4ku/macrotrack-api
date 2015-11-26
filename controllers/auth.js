@@ -1,11 +1,33 @@
 // Load required packages
 var passport = require('passport');
-var BasicStrategy = require('passport-http').BasicStrategy;
+var JwtStrategy = require('passport-jwt').Strategy;
 var User = require('../models/user');
 
+// Config
+var config = require('../config');
+
+var opts = {};
+opts.secretOrKey = config.secret;
+opts.issuer = "macrotrack.fabricate.tech";
+
+passport.use(new JwtStrategy(opts, function (jwt_payload, done) {
+    User.findOne({email: jwt_payload.email}, function (err, user) {
+        if (err) {
+            return done(err, false);
+        }
+        if (user) {
+            done(null, user);
+        } else {
+            done(null, false);
+            // or you could create a new account
+        }
+    });
+}));
+
+/*
 passport.use(new BasicStrategy(
-    function (username, password, callback) {
-        User.findOne({username: username}, function (err, user) {
+ function (email, password, callback) {
+ User.findOne({email: email}, function (err, user) {
             if (err) {
                 return callback(err);
             }
@@ -32,5 +54,6 @@ passport.use(new BasicStrategy(
         });
     }
 ));
+ */
 
-exports.isAuthenticated = passport.authenticate('basic', {session: false});
+exports.isAuthenticated = passport.authenticate('jwt', {session: false});
