@@ -64,7 +64,7 @@ router.route('/ingredients')
     .get(authController.isAuthenticated, ingredientController.getIngredients)
     .post(authController.isAuthenticated, ingredientController.postIngredients);
 
-router.route('/searchIngredient/:ingredient_string')
+router.route('/search/ingredients/:ingredient_string')
     .get(authController.isAuthenticated, ingredientController.searchIngredients);
 
 router.route('/ingredients/:ingredient_id')
